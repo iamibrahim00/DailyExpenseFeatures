@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+  }
+  
+  
+  ul {
+    list-style: none;
+  }
+  
+  ul li {
+    padding: 5px;
+    background: #f4f4f4;
+    margin: 5px 0;
+  }
+  #listOfitems{
+    background-color: 2px solid black;
+    text-align: center;
+  }
+  #listOfitems1{
+    background-color: 2px solid black;
+    text-align: center;
+  }
+  
+  header {
+    background: #f4f4f4;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  
+  .cont{
+  
+    margin-top: 20px;
+    margin-left: 450px;
+  }
+   #form{
+    border: 10px solid orange;
+    margin: auto;
+   }
+   .btn {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    border: 0;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+  
+   
+  #btn{
+    color: orange;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 50px;
+    margin-top: 20px;
+  }
+  #delbtn{
+    padding: 7px;
+    border-radius: 10px;
+    margin-left: 20px;
+    background-color: red;
+  
+  }
+  #editbtn{
+    padding: 7px;
+    border-radius: 10px;
+    margin-left: 20px;
+    background-color: green;
+  }
