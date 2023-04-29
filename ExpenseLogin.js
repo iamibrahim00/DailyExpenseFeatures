@@ -17,6 +17,7 @@ function Storage(event) {
   axios.post("http://localhost:4000/user/login",obj)
   .then((response) => {
       console.log(response)
+        localStorage.setItem('token',response.data.token)
       window.location.href="./DailyExpense.html"
   }).catch((err) => {
    

@@ -26,7 +26,8 @@ app.use(userRoutes)
 app.use(loginRoutes)
 app.use(ExpenseRoutes)
 
-
+User.hasMany(Expense)
+Expense.belongsTo(User)
 
 sequelize
   .sync()

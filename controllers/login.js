@@ -2,7 +2,12 @@ const e = require('express');
 const User = require('../models/User');
 const { Error } = require('sequelize');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
+
+function generateToken(id){
+    return jwt.sign({userId:id },'987654321')
+}
 exports.login = async (req,res,next) =>{
      try{
             let email = req.body.email
@@ -24,7 +29,8 @@ exports.login = async (req,res,next) =>{
                         return res.status(200).json({
                             data:[],
                             success:true,
-                            msg:"Successfully Logged in"
+                            msg:"Successfully Logged in",
+                            token:generateToken(user[0].id)
                         })
                     }
                     else{
