@@ -23,7 +23,7 @@ function Storage(event) {
       window.location.href='./ExpenseLogin.html'
         
   }).catch((err) => {
-   
+    
       document.body.innerHTML =document.body.innerHTML + "<h4>Err: Email Already Exist</h4>"
   })
 }

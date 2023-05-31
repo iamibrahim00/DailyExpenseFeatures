@@ -5,5 +5,5 @@ const sequelize = new Sequelize('daily-expense', 'root', '12345', {
   host: 'localhost'
 });
 
-module.exports = sequelize;
+module.exports = sequelize; 
  

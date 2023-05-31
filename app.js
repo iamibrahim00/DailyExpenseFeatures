@@ -16,7 +16,10 @@ app.use(cors())
 
 const userRoutes = require('./routes/dailyExpense')
 const loginRoutes = require('./routes/login')
-const ExpenseRoutes = require('./routes/expense')
+const ExpenseRoutes = require('./routes/expense');
+const purchaseRoutes = require('./routes/purcahse')
+const premiumRoutes = require('./routes/premiumFeature')
+const Order = require('./models/Order');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,9 +28,14 @@ app.use(jsonParser)
 app.use(userRoutes)
 app.use(loginRoutes)
 app.use(ExpenseRoutes)
+app.use(purchaseRoutes) 
+app.use(premiumRoutes)
 
 User.hasMany(Expense)
 Expense.belongsTo(User)
+
+User.hasMany(Order)
+Order.belongsTo(User)
 
 sequelize
   .sync()

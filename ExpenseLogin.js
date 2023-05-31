@@ -23,4 +23,4 @@ function Storage(event) {
    
       document.body.innerHTML =document.body.innerHTML + "<h4>Err: Please check the credentials</h4>"
   })
-}
+} 

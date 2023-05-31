@@ -58,6 +58,13 @@
     margin: 50px;
     margin-top: 20px;
   }
+  #premium{
+    color: orange;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 50px; 
+    margin-top: 20px;
+  }
   #delbtn{
     padding: 7px;
     border-radius: 10px;

@@ -1,3 +1,4 @@
+
 let btn = document.getElementById('submit')
 btn.addEventListener('click',Storage)
 function Storage(event) {
@@ -25,8 +26,57 @@ function Storage(event) {
   })
 }
 
+function showPremiumuserAdmin(){
+  document.getElementById("rzp-button1").style.visibility ="hidden"
+  document.getElementById('message').innerHTML="you're a premium user now"
+}
+
+function showLeaderboard(){
+  const inputElement = document.createElement('input')
+  inputElement.type = "button"
+  inputElement.value ='Show LeaderBoard'
+  inputElement.onclick= async()=>{
+    const token = localStorage.getItem("token")
+    const userLeaderBoardArray = await axios.get("http://localhost:4000/showLeaderBoard",{headers : {"Authorization" : token}})
+   
+    
+    var leaderboardElem = document.getElementById("leaderboard")
+    leaderboardElem.innerHTML += `<h1>Leader Board </h1>`
+    
+    userLeaderBoardArray.data.forEach((userdetails)=> {
+    
+ 
+        leaderboardElem.innerHTML += `<li>Name - ${userdetails.name} Total Expense - ${userdetails.total_cost}</li>`
+    
+    
+    
+    });
+  } 
+  document.getElementById("message").appendChild(inputElement)
+  
+}
+
+
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
 window.addEventListener("DOMContentLoaded", ()=>{
   const token = localStorage.getItem('token')
+  const decodeToken = parseJwt(token)
+  console.log(decodeToken)
+  const isadmin = decodeToken.ispremiumuser
+  if(isadmin){
+    showPremiumuserAdmin()
+    showLeaderboard()
+  }
+
   axios.get("http://localhost:4000/user/get-expense",{headers : {"Authorization" : token}})
   .then((response) =>{
     console.log(response)
@@ -41,7 +91,7 @@ window.addEventListener("DOMContentLoaded", ()=>{
 function showUserOnScreen(obj){
   const parentElement = document.getElementById('listOfitems')
  
-  const childNode =`<li id = ${obj.id}>${obj.id}- ${obj.money} - ${obj.description} - ${obj.category}
+  const childNode =`<li id = ${obj.id}>${obj.money} - ${obj.description} - ${obj.category}
   <button onclick = deleteUser('${obj.id}')>Delete</button></li>`  
                   
                     
@@ -69,3 +119,37 @@ function showUserOnScreen(obj){
   }
 
  }
+ 
+ document.getElementById('rzp-button1').onclick = async function(e){
+  const token = localStorage.getItem('token')
+  console.log(token)
+  const response = await axios.get('http://localhost:4000/premiummembership',{headers :{"Authorization": token}});
+  console.log(response)
+  var options = {
+    "key":response.data.key_id,
+    "order_id": response.data.order.id,
+    "handler": async function(response){
+      await axios.post('http://localhost:4000/updatetansactions',{
+        order_id: options.order_id,
+        payment_id : response.razorpay_payment_id
+      },{headers :{"Authorization": token}})
+      
+      alert("You are a Premium User Now")
+      document.getElementById("rzp-button1").style.visibility ="hidden"
+      document.getElementById('message').innerHTML="you're a premium user now"
+      showLeaderboard()
+
+      localStorage.setItem('token',res.data.token)
+     
+    
+    }
+  }
+
+ const rzp1 = new Razorpay(options)
+ rzp1.open()
+ e.preventDefault()
+
+ rzp1.on('payment failed', function(response){
+  consoile.log(response)
+ })
+}

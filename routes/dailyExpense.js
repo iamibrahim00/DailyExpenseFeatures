@@ -9,4 +9,4 @@ const router = express.Router()
 router.post('/user/signup',ExpenseController.postDailyExpense)
 
 
-module.exports = router
+module.exports = router 

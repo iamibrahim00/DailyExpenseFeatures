@@ -17,7 +17,7 @@ exports.postExpense = async (req,res,next) =>{
         description : description,
          category: category,
          userId : id
-    
+     
         });
     res.status(201).json({newExpenseDetails : data})
     }catch(err){
