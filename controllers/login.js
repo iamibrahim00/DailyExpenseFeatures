@@ -40,7 +40,7 @@ const login = async (req, res) => {
     try{
     const { email, password } = req.body;
     if(isstringinvalid(email) || isstringinvalid(password)){
-        return res.status(400).json({message: 'EMail idor password is missing ', success: false})
+        return res.status(400).json({message: 'EMail id or password is missing ', success: false})
     }
     console.log(password);
     const user  = await User.findAll({ where : { email }})
