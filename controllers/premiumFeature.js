@@ -5,27 +5,42 @@ const e = require('express');
 
 const getUserLeaderBoard = async (req, res) => {
     try{
-        const users = await User.findAll()
-        const expenses = await Expense.findAll()
-        const userAggregatedExpenses = {} 
-        expenses.forEach((expense) => {
+        const leaderboardofusers = await User.findAll({
             
-            if(userAggregatedExpenses[expense.userId]>0){
-                userAggregatedExpenses[expense.userId] =userAggregatedExpenses[expense.userId] + parseInt(expense.money)
+            attributes:['id','name',[sequelize.fn('sum',sequelize.col('expenses.money')),'total_cost']],
+            
+            include: [
+                {
+                    model : Expense,
+                    attributes : []
             }
-            else {
-                userAggregatedExpenses[expense.userId] = parseInt(expense.money)
-            }
-          
-        });
-
-        var userleaderboarddetails = []
-        users.forEach((user)=>{
-            userleaderboarddetails.push({name:user.name, total_cost:userAggregatedExpenses[user.id] || 0})
+               
+            ],
+            group :['user.id'],
+            order:[[sequelize.col('total_cost'),'DESC']]
         })
-        console.log(userleaderboarddetails)
-       userleaderboarddetails.sort((a,b)=>b.total_cost - a.total_cost)
-        res.status(200).json(userleaderboarddetails)
+        const expenses = await Expense.findAll({
+            attributes: ['userId',[sequelize.fn('sum',sequelize.col('expense.money')),'total_cost']],
+            group :['userId']
+        })
+
+         //const userAggregatedExpenses = {} 
+        // expenses.forEach((expense) => {           
+        //     if(userAggregatedExpenses[expense.userId]>0){
+        //         userAggregatedExpenses[expense.userId] =userAggregatedExpenses[expense.userId] + parseInt(expense.money)
+        //     }
+        //     else {
+        //         userAggregatedExpenses[expense.userId] = parseInt(expense.money)
+        //     }          
+        // });
+
+    //     var userleaderboarddetails = []
+    //     users.forEach((user)=>{
+    //         userleaderboarddetails.push({name:user.name, total_cost:userAggregatedExpenses[user.id] || 0})
+    //     })
+    //     console.log(userleaderboarddetails)
+    //    userleaderboarddetails.sort((a,b)=>b.total_cost - a.total_cost)
+        res.status(200).json(expenses)
     
 } catch (err){
     console.log(err)
