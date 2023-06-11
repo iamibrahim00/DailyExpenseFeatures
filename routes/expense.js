@@ -8,7 +8,7 @@ const User = require('../models/User');
 const router = express.Router()
 
 
-router.post('/user/add-expense',ExpenseController.postExpense)
+router.post('/user/add-expense',UserAuthenticate.authenticate,ExpenseController.postExpense)
 
 router.get('/user/get-expense',UserAuthenticate.authenticate,ExpenseController.getExpense)
 

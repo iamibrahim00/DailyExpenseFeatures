@@ -31,6 +31,8 @@ const purchasepremium =async (req, res) => {
  const updateTransactionStatus = async (req, res ) => {
     try {
         const userId = req.user.id;
+        const totalExpenses = req.user.totalExpenses
+        console.log("wow =>",totalExpenses)
         const { payment_id, order_id} = req.body;
         const order  = await Order.findOne({where : {orderid : order_id}}) //2
         const promise1 =  order.update({ paymentid: payment_id, status: 'SUCCESSFUL'}) 

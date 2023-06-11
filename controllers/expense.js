@@ -1,25 +1,32 @@
 const Expense = require('../models/Expense')
 const jwt = require('jsonwebtoken');
+const User = require('../models/User')
 
-exports.postExpense = async (req,res,next) =>{
+exports.postExpense =  async (req,res,next) =>{
  
     try{
 
-    const money = req.body.money;
-    const description = req.body.description;
-    const category = req.body.category;
+    const { money, description, category } = req.body;
     
     const token = req.body.postToken
     const user = jwt.verify(token,'987654321')
-    const id = user.userId
+    const userId = user.userId
 
-    const data = await Expense.create({money :money,
-        description : description,
-         category: category,
-         userId : id
-     
-        });
-    res.status(201).json({newExpenseDetails : data})
+
+    Expense.create({ money, description, category, userId:user.userId}).then(expense => {
+            const totalExpense = Number(req.user.totalExpenses) + Number(money)
+        console.log(totalExpense)
+        User.update({
+            totalExpenses : totalExpense
+        },{
+            where: {id:user.userId}
+        }).then(async()=>{
+            return res.status(201).json({expense, success: true } );
+        })
+        
+    })
+    
+   
     }catch(err){
        console.log(err)
         

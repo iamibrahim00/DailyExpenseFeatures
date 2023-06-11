@@ -12,14 +12,16 @@ function Storage(event) {
      money,
   description,
   category,
-  postToken
+  postToken,
+  
   }
 
   console.log(obj)
-  axios.post("http://localhost:4000/user/add-expense",obj)
+  axios.post("http://localhost:4000/user/add-expense",obj,{headers : {"Authorization" : postToken}})
   .then((response) => {
     //console.log(obj.id)
-      showUserOnScreen(response.data.newExpenseDetails)
+      showUserOnScreen(response.data.expense)
+      
      // console.log(newExpenseDetails)
   }).catch(err => {
       document.body.innerHTML =document.body.innerHTML + "<h4>Something Went wrong </h4>"
@@ -46,7 +48,7 @@ function showLeaderboard(){
     userLeaderBoardArray.data.forEach((userdetails)=> {
     
  
-        leaderboardElem.innerHTML += `<li>Name - ${userdetails.name} Total Expense - ${userdetails.total_cost}</li>`
+        leaderboardElem.innerHTML += `<li>Name - ${userdetails.name} Total Expense - ${userdetails.totalExpenses}</li>`
     
     
     
@@ -130,6 +132,7 @@ function showUserOnScreen(obj){
   var options = {
     "key":response.data.key_id,
     "order_id": response.data.order.id,
+    
     "handler": async function(response){
       const res = await axios.post('http://localhost:4000/updatetansactions',{
         order_id: options.order_id,

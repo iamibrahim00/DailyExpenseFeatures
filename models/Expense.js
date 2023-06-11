@@ -3,7 +3,7 @@ const Sequelize = require('sequelize')
 const sequelize = require('../util/database')
 
 const Expense = sequelize.define('expense', {
-  id : {
+  expenseid : {
     type : Sequelize.INTEGER,
     allowNull : false,
     autoIncrement : true,
@@ -11,7 +11,7 @@ const Expense = sequelize.define('expense', {
   },
   money : Sequelize.STRING,
   description : Sequelize.STRING,
-  category : Sequelize.STRING
+  category : Sequelize.STRING,
 
 }); 
 
