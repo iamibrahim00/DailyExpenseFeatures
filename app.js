@@ -6,6 +6,7 @@ const User =require('./models/User')
 const bcrypt = require('bcrypt')
 const Expense =require('./models/Expense')
 const sequelize = require('./util/database');
+const dotenv = require("dotenv")
 
 var cors = require('cors')
 var jsonParser = bodyParser.json()

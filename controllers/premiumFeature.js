@@ -5,16 +5,11 @@ const e = require('express');
 
 const getUserLeaderBoard = async (req, res) => {
     try{
-        const users = await User.findAll({
-            
+        const users = await User.findAll({          
             order:[
                 ['totalExpenses','DESC']
             ]
          })
-        const expenses = await Expense.findAll({
-            attributes: ['userId',[sequelize.fn('sum',sequelize.col('expense.money')),'total_cost']],
-            group :['userId']
-        })
         res.status(200).json(users)
     //     const users = await User.findAll()
     //     const expenses = await Expense.findAll()

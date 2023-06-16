@@ -93,18 +93,19 @@ window.addEventListener("DOMContentLoaded", ()=>{
 function showUserOnScreen(obj){
   const parentElement = document.getElementById('listOfitems')
  
-  const childNode =`<li id = ${obj.id}>${obj.money} - ${obj.description} - ${obj.category}
-  <button onclick = deleteUser('${obj.id}')>Delete</button></li>`  
+  const childNode =`<li id = ${obj.expenseid}>${obj.money} - ${obj.description} - ${obj.category}
+  <button onclick = deleteUser('${obj.expenseid}')>Delete</button></li>`  
                   
                     
    parentElement.innerHTML = parentElement.innerHTML +childNode
 }
 
- function deleteUser (objId){
+ function deleteUser (expenseid){
   const deleteToken = localStorage.getItem('token')
-  axios.delete(`http://localhost:4000/user/delete-expense/${objId}`,{headers:{"Authorization":deleteToken}})
+  
+  axios.delete(`http://localhost:4000/user/delete-expense/${expenseid}`,{headers:{"Authorization":deleteToken}})
   .then((response)=>{
-    removeUserfromScreen(objId)
+    removeUserfromScreen(expenseid)
   }).catch((err) => {   
                 console.log(err)
                 
@@ -112,9 +113,9 @@ function showUserOnScreen(obj){
  
 }
 
- function removeUserfromScreen(objId){
+ function removeUserfromScreen(expenseid){
   const parentNode= document.getElementById('listOfitems')
-  const childNodeTobeDeleted = document.getElementById(objId)
+  const childNodeTobeDeleted = document.getElementById(expenseid)
   if(childNodeTobeDeleted){
     //parentNode.removeChild(childNodeTobeDeleted);
       childNodeTobeDeleted.remove()

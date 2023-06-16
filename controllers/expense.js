@@ -1,9 +1,10 @@
 const Expense = require('../models/Expense')
 const jwt = require('jsonwebtoken');
-const User = require('../models/User')
+const User = require('../models/User');
+const sequelize = require('../util/database');
 
-exports.postExpense =  async (req,res,next) =>{
- 
+const postExpense =  async (req,res,next) =>{
+    const t = await sequelize.transaction()
     try{
 
     const { money, description, category } = req.body;
@@ -12,31 +13,30 @@ exports.postExpense =  async (req,res,next) =>{
     const user = jwt.verify(token,'987654321')
     const userId = user.userId
 
+    
 
-    Expense.create({ money, description, category, userId:user.userId}).then(expense => {
-            const totalExpense = Number(req.user.totalExpenses) + Number(money)
+    const expense = await Expense.create({ money, description, category, userId:user.userId},{transaction:t})
+        const totalExpense = Number(req.user.totalExpenses) + Number(money)
         console.log(totalExpense)
-        User.update({
+        await User.update({
             totalExpenses : totalExpense
         },{
-            where: {id:user.userId}
-        }).then(async()=>{
-            return res.status(201).json({expense, success: true } );
+            where: {id:user.userId},
+            transaction :t
         })
+            await t.commit()
+            return res.status(201).json({expense, success: true } );
         
-    })
-    
-   
     }catch(err){
+        await t.rollback()
        console.log(err)
         
         
     }
 }
 
-exports.getExpense = async(req,res,next)=>{
+const getExpense = async(req,res,next)=>{
     try{
-        console.log('this is=>',req.user.id)
         const expense = await Expense.findAll({where:{userId: req.user.id}});
         res.status(200).json({allExpense : expense,success:true})
     }catch(err){
@@ -44,15 +44,33 @@ exports.getExpense = async(req,res,next)=>{
     }
    
 }
-exports.deleteExpense = async(req,res,next)=>{
-    try{
-        //const expenseId= req.params.id
-        const deletetoken = req.user.id
-        console.log(deletetoken)
-        await Expense.destroy({where : {userId:deletetoken}});
+const deleteExpense = async(req,res,next)=>{
+    const t = await sequelize.transaction()
+    try{ 
+        const deleteexpense = await Expense.findByPk(req.params.expenseid)
+        const deletetoken = req.params.expenseid    
+
+        const destroyMoney = deleteexpense.money     
+        const totalExpense1 = Number(req.user.totalExpenses) - Number(destroyMoney)
+        await Expense.destroy({
+            where : {expenseid:deletetoken ,userId: req.user.id}},{transaction :t}
+            );
+        await User.update({
+                totalExpenses : totalExpense1
+            },{
+                where: {id:req.user.id},
+                transaction :t
+            })
+        await t.commit()
         res.status(200).json({success : true})
     }catch(err){
+        await t.rollback()
         console.log(err)
     }
    
+}
+module.exports={
+    postExpense,
+    getExpense,
+    deleteExpense
 }
